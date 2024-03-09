@@ -92,7 +92,9 @@ def save_detail(save_data):
     else:
         return True
     
-@app.get("/API/{room_id}/{furniture_name}/{position}/{size}/{rote}")
+#{room_id}/{furniture_name}/{position}/{size}/{rote}
+    
+@app.post("/API")
 def display(room_id: str, furniture_name: str, position: str, size: str, rote: str):
     furniture_name_list = re.findall('[a-z]+|[0-9]+' , furniture_name, flags=re.IGNORECASE)
     position_str_list = re.findall('[0-9]+', position)
@@ -114,19 +116,38 @@ def display(room_id: str, furniture_name: str, position: str, size: str, rote: s
     #return{room_id, furniture_name_list[0], position_list[0], size_list[0], rote_list[0]}
     #return{room_id, furniture_name, position, size, rote, furniture_name_list[0]}
 
+@app.get("/API2")
+def display(room_id: str, furniture_name: str, position: str, size: str, rote: str):
+    furniture_name_list = re.findall('[a-z]+|[0-9]+' , furniture_name, flags=re.IGNORECASE)
+    position_str_list = re.findall('[0-9]+', position)
+    position_list = [int(num) for num in position_str_list]
+    size_str_list = re.findall('[0-9]+[.]*[0-9]+', size)
+    size_list = [float(num) for num in size_str_list]
+    rote_str_list = re.findall('[0-9]+', rote)
+    rote_list = [int(num) for num in rote_str_list]
+    detail={room_id:{}}
+    for i in range(len(furniture_name_list)):
+        dict = {
+            'position': [position_list[i*2], position_list[i*2+1]],
+            'size':size_list[i],
+            'rote':rote_list[i]
+            }
+        detail[room_id][furniture_name_list[i]] = dict
+    print(detail)
+    return(save_detail(detail))
 
 
 user_detail_test = {
-    'detail@gmail.com':{
-        'chest':{
-            'position': [0, 0],
-            'size':1.0,
-            'rote':90
+    "detail@gmail.com":{
+        "chest":{
+            "position": [0, 0],
+            "size":1.0,
+            "rote":90
             },
-        'chair':{
-            'position':[0, 0],
-            'size':1.0,
-            'rote':90
+        "chair":{
+            "position":[0, 0],
+            "size":1.0,
+            "rote":90
             }
     }
 }
